@@ -35,7 +35,6 @@ zstyle ':prezto:load' pmodule \
   'git' \
   'archive' \
   'namedir' \
-  'syntax-highlighting' \
   'prompt'
 
 #
