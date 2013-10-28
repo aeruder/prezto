@@ -17,3 +17,4 @@ else
 fi
 unset prompt_argv
 
+setopt PROMPT_SUBST

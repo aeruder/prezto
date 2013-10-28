@@ -10,5 +10,182 @@ if [[ -s "${ZDOTDIR:-$HOME}/.zprezto/init.zsh" ]]; then
   source "${ZDOTDIR:-$HOME}/.zprezto/init.zsh"
 fi
 
-# Customize to your needs...
+##################################
+# add our battery to the prompt
+##################################
+function battery_percent() {
+    local a b
+    a=$(</sys/class/power_supply/BAT1/energy_now)
+    b=$(</sys/class/power_supply/BAT1/energy_full)
+    echo "$(((a * 100) / b))%%"
+}
 
+if [ `hostname` = tanooki ]; then
+    PR_FLAGS+=(battery_percent)
+fi
+
+##################################
+# add directory size to our prompt
+##################################
+function byte_size() {
+    local str sizes divs ans
+
+    divs=0
+    str=${1:-0}
+    sizes=( "b" "k" "M" "G" )
+
+    while (( str >= 100.0 )); do
+        divs=$(( divs + 1 ))
+        str=$(( str / 1024. ))
+    done
+
+    str="${(l.3.. .)"${${str[1,3]}%%.}"}"
+    echo ${str}${sizes[divs+1]}
+}
+
+function pr_filesize() {
+    local files
+    files=(${(f)"$(stat -L +size -- *(.ND) /dev/null /dev/null)"})
+
+    files=`byte_size $(( ${(j: + :)${(@)files##* }} ))`
+    files=${${files%% #}## #}
+
+    echo $files
+}
+
+PR_FLAGS+=(pr_filesize)
+
+# Necessary for pr_filesize, loads a stat builtin
+# to zsh
+zmodload zsh/stat
+
+# Automatically push directory onto the directory stack
+setopt autopushd
+
+# When there are duplicates in the history, expire
+# those first.  That way you only end up with one
+# ls in your history instead of 100
+setopt histexpiredupsfirst
+
+# If a command starts with a space, don't put it in the
+# history
+setopt histignorespace
+
+# When you use history expansion (!*) retype the command
+# instead of just immediately running it
+setopt histverify
+
+# Allow comments on the command-line
+setopt interactivecomments
+
+# Don't send HUP signal when closing shell
+setopt nohup
+
+# Don't beep
+setopt nobeep
+
+# Don't include duplicate directories in
+# directory stack
+setopt pushdignoredups
+
+# Swap meaning of +/- in PUSHD history
+setopt pushdminus
+
+# Don't print the directory after pushd/popd
+setopt pushdsilent
+
+# pushd with no arguments is pushd $HOME
+setopt pushdtohome
+
+##################################
+# Alias
+##################################
+
+alias damn='man'
+alias rm='rm -i'
+alias mv='mv -i'
+alias cp='cp -i'
+alias grep='grep --color=auto'
+alias rgrep='grep --color=auto -r'
+alias egrep='grep --color=auto -E'
+alias irb='irb --readline -r irb/completion'
+alias dh='dirs -v'
+
+alias -g CA="2>&1 | cat -A"
+alias -g CNT='| wc -l'
+alias -g DN='/dev/null'
+alias -g EH='|& head'
+alias -g EL='|& less'
+alias -g ET='|& tail'
+alias -g F='| fmt -'
+alias -g G='| grep --color=auto'
+alias -g H='| head'
+alias -g LL="2>&1 | less"
+alias -g L="| less"
+alias -g LS='| less -S'
+alias -g NE="2> /dev/null"
+alias -g NS='| sort -n'
+alias -g NUL="> /dev/null 2>&1"
+alias -g S='| sort'
+alias -g T='| tail'
+alias -g US='| sort -u'
+
+##################################
+# Keybindings
+##################################
+
+bindkey -v
+bindkey '^R' history-incremental-search-backward
+bindkey -M viins 'jk' vi-cmd-mode
+bindkey "^?" backward-delete-char
+
+function vim_mode_flag() {
+    echo $vim_mode
+}
+PR_FLAGS+=vim_mode_flag
+
+vim_ins_mode="INS"
+vim_cmd_mode="CMD"
+vim_mode=$vim_ins_mode
+
+function zle-keymap-select {
+  vim_mode="${${KEYMAP/vicmd/${vim_cmd_mode}}/(main|viins)/${vim_ins_mode}}"
+  zle reset-prompt
+}
+zle -N zle-keymap-select
+
+function zle-line-finish {
+  vim_mode=$vim_ins_mode
+}
+zle -N zle-line-finish
+
+##################################
+# sudo vim -> sudoedit
+##################################
+function sudo() {
+    if [ "$1" = vim ]; then
+        shift
+        sudo -e "$@"
+    else
+        command sudo "$@"
+    fi
+}
+
+##################################
+# Some options
+##################################
+HISTFILE=$HOME/.zsh_history
+HISTSIZE=900000000
+SAVEHIST=100000
+DIRSTACKSIZE=20
+
+armflag() {
+    echo "arm"
+}
+
+convert_arm() {
+    export CROSS_COMPILE=arm-buildroot-linux-uclibcgnueabi-
+    export ARCH=arm
+
+    PR_FLAGS+=(armflag)
+}
