@@ -83,12 +83,18 @@ function pr_git_branch {
   echo "%{$fg_no_bold[yellow]%}${ref#refs/heads/}"
 }
 
+function pr_host {
+    if ! [ -z "$SSH_CLIENT" ]; then
+        echo "%{${fg_no_bold[green]}%}%n@%m "
+    fi
+}
+
 
 PR_FLAGS+=(pr_sig_num)
 PR_FLAGS+=(pr_git_branch)
 
 PROMPT='${${PR_SAVED_STATUS::=$?}##*}\
-%{${fg_no_bold[green]}%}%n@%m \
+$(pr_host)\
 %{${fg_bold[magenta]}%}%4~%{${fg_bold[white]}%} \
 $(pr_loadflags) %# %{$reset_color%}'
 
