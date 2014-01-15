@@ -104,7 +104,7 @@ setopt pushdtohome
 alias damn='man'
 alias rm='rm -i'
 alias mv='mv -i'
-alias cp='cp -i'
+alias cp='cp -i --reflink=auto'
 alias grep='grep --color=auto'
 alias rgrep='grep --color=auto -r'
 alias egrep='grep --color=auto -E'
