@@ -102,6 +102,7 @@ setopt pushdtohome
 ##################################
 
 alias damn='man'
+alias show='xdg-open'
 alias rm='rm -i'
 alias mv='mv -i'
 alias cp='cp -i --reflink=auto'
