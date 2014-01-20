@@ -116,5 +116,5 @@ $(pr_aeruder_host)\
 $(pr_aeruder_loadflags) %# %{$reset_color%}'
 
 RPROMPT='\
-%{${fg_bold[white]}%}[%{${fg_no_bold[yellow]}%}%D{%H:%M}%{${fg_bold[white]}%}]'
+%{${fg_bold[white]}%}[%{${fg_no_bold[yellow]}%}%D{%H:%M}%{$reset_color%}]'
 
