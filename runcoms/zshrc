@@ -105,7 +105,13 @@ alias damn='man'
 alias show='xdg-open'
 alias rm='rm -i'
 alias mv='mv -i'
-alias cp='cp -i --reflink=auto'
+
+if [ "`uname`" != "Darwin" ]; then
+  alias cp='cp -i --reflink=auto'
+else
+  alias cp='cp -i'
+fi
+
 alias grep='grep --color=auto'
 alias rgrep='grep --color=auto -r'
 alias egrep='grep --color=auto -E'
