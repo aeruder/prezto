@@ -97,6 +97,9 @@ setopt pushdsilent
 # pushd with no arguments is pushd $HOME
 setopt pushdtohome
 
+# When a glob doesn't match, just pass it to the command
+unsetopt nomatch
+
 ##################################
 # Alias
 ##################################
