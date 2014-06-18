@@ -42,8 +42,10 @@ if [ -e /usr/bin/src-hilite-lesspipe.sh ]; then
 fi
 
 # Deal with konsole's broken TERM setting
-if [ "$COLORTERM" = "gnome-terminal" ] || [ -n "$KONSOLE_PROFILE_NAME" ]; then
-    export TERM=xterm-256color
+if [ "$TERM" != "screen" ] && [ "$TERM" != "screen-256color" ]; then
+  if [ "$COLORTERM" = "gnome-terminal" ] || [ -n "$KONSOLE_PROFILE_NAME" ]; then
+      export TERM=xterm-256color
+  fi
 fi
 
 # Read in from .zsh-pre-manpaths and .zsh-post-manpaths
