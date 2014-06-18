@@ -115,4 +115,18 @@ done
 ldpath=( ${(u)ldpath[@]} )
 export LD_LIBRARY_PATH="${(j%:%)ldpath}"
 
+#
+# Temporary Files
+#
+
+if [[ ! -d "$TMPDIR" ]]; then
+  export TMPDIR="/tmp/$USER"
+  mkdir -p -m 700 "$TMPDIR"
+fi
+
+TMPPREFIX="${TMPDIR%/}/zsh"
+if [[ ! -d "$TMPPREFIX" ]]; then
+  mkdir -p "$TMPPREFIX"
+fi
+
 
