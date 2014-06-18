@@ -55,8 +55,8 @@ function _terminal-set-titles-with-command {
     )
   else
     # Set the command name, or in the case of sudo or ssh, the next command.
-    local cmd="${${2[(wr)^(*=*|sudo|ssh|-*)]}:t}"
-    local truncated_cmd="${cmd/(#m)?(#c15,)/${MATCH[1,12]}...}"
+    local cmd="$1"
+    local truncated_cmd="${cmd/(#m)?(#c60,)/${MATCH[1,54]}...}"
     unset MATCH
 
     set-window-title "$cmd"
