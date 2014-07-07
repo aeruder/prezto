@@ -177,7 +177,7 @@ zle -N zle-line-finish
 # sudo vim -> sudoedit
 ##################################
 function sudo() {
-    if [ "$1" = vim ]; then
+    if [ "$1" = "$VISUAL" ]; then
         shift
         sudo -e "$@"
     else
