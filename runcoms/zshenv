@@ -17,8 +17,8 @@ fi
 # Editors
 #
 
-export EDITOR=emacs
-export VISUAL=emacs
+export EDITOR=e
+export VISUAL=e
 export LESS=-FmqXR
 export PAGER=less
 
